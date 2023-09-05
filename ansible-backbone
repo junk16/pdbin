@@ -1,0 +1,35 @@
+#!/bin/bash
+
+main(){
+  local base="$1"
+  mkdir -p "${base}/group_vars" && \
+  mkdir -p "${base}/roles" && \
+  mkdir -p "${base}/roles/dummy/tasks" && \
+  touch  "${base}/roles/dummy/tasks/main.yml" && \
+  mkdir -p "${base}/inventories/{local,deployment,staging,production}/group_vars" && \
+  touch  "${base}/inventories/{local,deployment,staging,production}/group_vars/all.yml" && \
+  touch  "${base}/inventories/{local,deployment,staging,production}/hosts" && \
+  mkdir -p "${base}/template"
+}
+
+cmd=$(basename "$0")
+if [[ $# -ne 1 ]];  then
+  echo "Usage: $cmd base_path"
+  exit 1
+fi
+
+path=$1
+if ! [[  -d $path ]]; then
+  echo "$path is not actual directory"
+  exit 1
+fi
+
+main "$1"
+
+if ! main "$1"; then
+  echo "fail to create backbone"
+  exit 1
+fi
+
+exit 0
+
